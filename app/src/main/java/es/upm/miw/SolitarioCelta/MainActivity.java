@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         try {  // Añadir al fichero
             FileOutputStream fos;
 
-            fos = openFileOutput(obtenerNombreFichero(), Context.MODE_APPEND); // Memoria interna
+            fos = openFileOutput(obtenerNombreFichero(), Context.MODE_PRIVATE); // Memoria interna
             fos.write(miJuego.serializaTablero().getBytes());
             fos.close();
         } catch (Exception e) {
