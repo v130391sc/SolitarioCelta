@@ -1,6 +1,7 @@
 package es.upm.miw.SolitarioCelta;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -12,6 +13,10 @@ import android.view.View;
 import android.widget.RadioButton;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -85,6 +90,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.opcReiniciarPartida:
                 new AlertRestartDialogFragment().show(getFragmentManager(), "ALERT_DIALOG");
                 return true;
+            case R.id.opcGuardarPartida:
+                accionGuardar();
+                return true;
+            case R.id.opcRecuperarPartida:
+                accionRecuperar();
             // TODO!!! resto opciones
 
             default:
@@ -96,4 +106,50 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    /**
+     * Devuelve el nombre del fichero
+     *
+     * @return nombre del fichero
+     */
+    private String obtenerNombreFichero() {
+
+        return getResources().getString(R.string.nombreFicheroPersistencia);
+    }
+
+    private void accionGuardar() {
+
+        try {  // Añadir al fichero
+            FileOutputStream fos;
+
+            fos = openFileOutput(obtenerNombreFichero(), Context.MODE_APPEND); // Memoria interna
+            fos.write(miJuego.serializaTablero().getBytes());
+            fos.close();
+        } catch (Exception e) {
+            Log.e("accionGuardar()", "FILE I/O ERROR: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+    private void accionRecuperar() {
+        BufferedReader fin;
+
+        try {
+            fin = new BufferedReader(
+                    new InputStreamReader(openFileInput(obtenerNombreFichero()))); // Memoria interna
+            String linea = fin.readLine();
+            while (linea != null) {
+                miJuego.deserializaTablero(linea);
+                linea = fin.readLine();
+            }
+            fin.close();
+        } catch (Exception e) {
+            Log.e("accionRecuperar", "FILE I/O ERROR: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        mostrarTablero();
+    }
+
 }
