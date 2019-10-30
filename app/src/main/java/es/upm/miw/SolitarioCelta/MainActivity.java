@@ -18,9 +18,15 @@ import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 
+import es.upm.miw.SolitarioCelta.dialogs.AlertDialogFragment;
+import es.upm.miw.SolitarioCelta.dialogs.AlertRestartDialogFragment;
+import es.upm.miw.SolitarioCelta.dialogs.AlertRetrieveDialogFragment;
+import es.upm.miw.SolitarioCelta.models.Partida;
+import es.upm.miw.SolitarioCelta.models.RepositorioPartidas;
+
 public class MainActivity extends AppCompatActivity {
 
-	SCeltaViewModel miJuego;
+	public SCeltaViewModel miJuego;
     public final String LOG_KEY = "MiW";
     private RepositorioPartidas repositorioPartidas;
 
@@ -51,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         mostrarTablero();
         if (miJuego.juegoTerminado()) {
-            repositorioPartidas.insert(new Partida());
+            repositorioPartidas.insert(new Partida("Sergio", miJuego.numeroFichas()));
             new AlertDialogFragment().show(getFragmentManager(), "ALERT_DIALOG");
         }
     }

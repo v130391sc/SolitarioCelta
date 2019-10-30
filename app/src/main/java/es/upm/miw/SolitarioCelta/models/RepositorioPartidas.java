@@ -1,4 +1,4 @@
-package es.upm.miw.SolitarioCelta;
+package es.upm.miw.SolitarioCelta.models;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,12 +8,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static es.upm.miw.SolitarioCelta.PartidaContract.PartidaEntry;
+import static es.upm.miw.SolitarioCelta.models.PartidaContract.PartidaEntry;
 
 public class RepositorioPartidas extends SQLiteOpenHelper {
 
@@ -47,26 +48,35 @@ public class RepositorioPartidas extends SQLiteOpenHelper {
         return db.insert(PartidaEntry.TABLE_NAME, null, this.getContentValues(partida));
     }
 
-    public List<Partida> getAll(){
-        String consultaSQL = "SELECT * FROM " + PartidaEntry.TABLE_NAME;
+    public List<Partida> getAllOrderByNFichas(){
+        String consultaSQL = "SELECT * FROM " + PartidaEntry.TABLE_NAME + " ORDER BY " + PartidaEntry.COL_NAME_NTILES +" ASC";
         List<Partida> partidas = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(consultaSQL, null);
-
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if(cursor.moveToFirst()){
             while (!cursor.isAfterLast()){
-                Partida partida = new Partida();
-                partida.setId(cursor.getInt(cursor.getColumnIndex(PartidaEntry.COL_NAME_ID)));
-                partida.setNombreJugador(cursor.getString(cursor.getColumnIndex(PartidaEntry.COL_NAME_PLAYERNAME)));
-                partida.setTimestamp(new Date(cursor.getString(cursor.getColumnIndex(PartidaEntry.COL_NAME_GAME_TIMESTAMP))));
-                partida.setnFichasRestantes(cursor.getInt(cursor.getColumnIndex(PartidaEntry.COL_NAME_NTILES)));
-                partidas.add(partida);
-                cursor.moveToNext();
+                try {
+                    Partida partida = new Partida();
+                    partida.setId(cursor.getInt(cursor.getColumnIndex(PartidaEntry.COL_NAME_ID)));
+                    partida.setNombreJugador(cursor.getString(cursor.getColumnIndex(PartidaEntry.COL_NAME_PLAYERNAME)));
+                    partida.setTimestamp(df.parse(cursor.getString(cursor.getColumnIndex(PartidaEntry.COL_NAME_GAME_TIMESTAMP))));
+                    partida.setnFichasRestantes(cursor.getInt(cursor.getColumnIndex(PartidaEntry.COL_NAME_NTILES)));
+                    partidas.add(partida);
+                    cursor.moveToNext();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         }
         cursor.close();
         db.close();
         return partidas;
+    }
+
+    public void deleteAll(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.delete(PartidaEntry.TABLE_NAME, null, null);
     }
 
     public ContentValues getContentValues(Partida partida) {

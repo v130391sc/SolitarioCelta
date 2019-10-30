@@ -1,4 +1,4 @@
-package es.upm.miw.SolitarioCelta;
+package es.upm.miw.SolitarioCelta.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -6,36 +6,38 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-public class AlertRetrieveDialogFragment extends DialogFragment {
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final MainActivity main = (MainActivity) getActivity();
+import es.upm.miw.SolitarioCelta.MainActivity;
+import es.upm.miw.SolitarioCelta.R;
 
-        super.onCreateDialog(savedInstanceState);
+public class AlertDialogFragment extends DialogFragment {
+	@Override
+	public Dialog onCreateDialog(Bundle savedInstanceState) {
+		final MainActivity main = (MainActivity) getActivity();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(main);
         builder
-                .setTitle(R.string.txtDialogoRecuperarTitulo)
-                .setMessage(R.string.txtDialogoRecuperarPregunta)
+                .setTitle(R.string.txtDialogoFinalTitulo)
+                .setMessage(R.string.txtDialogoFinalPregunta)
                 .setPositiveButton(
-                        getString(R.string.txtDialogoRecuperarAfirmativo),
+                        getString(R.string.txtDialogoFinalAfirmativo),
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                main.accionRecuperar();
+                                main.miJuego.reiniciar();
+                                main.mostrarTablero();
                             }
                         }
                 )
                 .setNegativeButton(
-                        getString(R.string.txtDialogoRecuperarNegativo),
+                        getString(R.string.txtDialogoFinalNegativo),
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                getDialog().cancel();
+                                main.finish();
                             }
                         }
                 );
 
-        return builder.create();
-    }
+		return builder.create();
+	}
 }

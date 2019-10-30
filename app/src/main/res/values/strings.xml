@@ -26,6 +26,12 @@
     <string name="txtDialogoRecuperarAfirmativo">Cargar partida</string>
     <string name="txtDialogoRecuperarNegativo">Volver</string>
 
+    <!-- Diálogo Borrar -->
+    <string name="txtDialogoBorrarTitulo">Borrar puntuaciones</string>
+    <string name="txtDialogoBorrarPregunta">¿Está seguro que desea borrar todas las puntuaciones?</string>
+    <string name="txtDialogoBorrarAfirmativo">¡Claro que lo estoy!</string>
+    <string name="txtDialogoBorrarNegativo">Volver a salvo...</string>
+
     <!-- Acerca de -->
     <string name="aboutText">Acerca de</string>
     <string name="aboutMessage">El juego consiste en ir comiendo piezas
@@ -40,6 +46,14 @@
     <string name="prefTituloCategoria2">Ajustes del juego</string>
     
     <string name="nombreFicheroPersistencia">persistenciaSF.txt</string>
+
+    <!--Mejores Puntuaciones -->
+    <string name="txtMejoresPuntuacionesPosicion">Posicion</string>
+    <string name="txtMejoresPuntuacionesNombreUsu">Nombre Usuario</string>
+    <string name="txtMejoresPuntuacionesNFichas">Nº Fichas</string>
+    <string name="txtMejoresPuntuacionesFecha">Fecha</string>
+
+
 
 
 </resources>

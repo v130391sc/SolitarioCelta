@@ -1,4 +1,4 @@
-package es.upm.miw.SolitarioCelta;
+package es.upm.miw.SolitarioCelta.models;
 
 import android.provider.Telephony;
 
