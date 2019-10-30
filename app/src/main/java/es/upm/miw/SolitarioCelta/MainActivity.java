@@ -22,10 +22,13 @@ public class MainActivity extends AppCompatActivity {
 
 	SCeltaViewModel miJuego;
     public final String LOG_KEY = "MiW";
+    private RepositorioPartidas repositorioPartidas;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        repositorioPartidas = new RepositorioPartidas(this);
 
         miJuego = ViewModelProviders.of(this).get(SCeltaViewModel.class);
         mostrarTablero();
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         mostrarTablero();
         if (miJuego.juegoTerminado()) {
-            // TODO guardar puntuación
+            repositorioPartidas.insert(new Partida());
             new AlertDialogFragment().show(getFragmentManager(), "ALERT_DIALOG");
         }
     }
@@ -100,8 +103,9 @@ public class MainActivity extends AppCompatActivity {
                     accionRecuperar();
                 }
                 return true;
-            // TODO!!! resto opciones
-
+            case R.id.opcMejoresResultados:
+                startActivity(new Intent(this, MejoresResultados.class));
+                return true;
             default:
                 Snackbar.make(
                         findViewById(android.R.id.content),
