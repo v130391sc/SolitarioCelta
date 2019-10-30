@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
 
 import es.upm.miw.SolitarioCelta.MainActivity;
 import es.upm.miw.SolitarioCelta.R;
@@ -25,6 +27,9 @@ public class AlertRetrieveDialogFragment extends DialogFragment {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                main.chronometer.setTextColor(Color.BLACK);
+                                main.chronometer.setBase(SystemClock.elapsedRealtime());
+                                main.chronometer.stop();
                                 main.accionRecuperar();
                             }
                         }

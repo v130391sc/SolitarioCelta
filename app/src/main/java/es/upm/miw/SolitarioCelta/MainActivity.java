@@ -3,14 +3,21 @@ package es.upm.miw.SolitarioCelta;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -29,14 +36,18 @@ public class MainActivity extends AppCompatActivity {
 	public SCeltaViewModel miJuego;
     public final String LOG_KEY = "MiW";
     private RepositorioPartidas repositorioPartidas;
+    TextView nFichasRestantes;
+    public Chronometer chronometer;
 
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         repositorioPartidas = new RepositorioPartidas(this);
-
         miJuego = ViewModelProviders.of(this).get(SCeltaViewModel.class);
+        chronometer = (Chronometer) findViewById(R.id.chronometer);
+        nFichasRestantes = findViewById(R.id.fichasRestantes);
+        nFichasRestantes.setText(Html.fromHtml("Quedan <b>"+miJuego.numeroFichas()+ "</b> fichas restantes"));
         mostrarTablero();
     }
 
@@ -47,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
      * @param v Vista de la ficha pulsada
      */
     public void fichaPulsada(@NotNull View v) {
+        chronometer.start();
+        chronometer.setTextColor(Color.RED);
         String resourceName = getResources().getResourceEntryName(v.getId());
         int i = resourceName.charAt(1) - '0';   // fila
         int j = resourceName.charAt(2) - '0';   // columna
@@ -54,10 +67,16 @@ public class MainActivity extends AppCompatActivity {
         Log.i(LOG_KEY, "fichaPulsada(" + i + ", " + j + ") - " + resourceName);
         miJuego.jugar(i, j);
         Log.i(LOG_KEY, "#fichas=" + miJuego.numeroFichas());
-
+        nFichasRestantes.setText(Html.fromHtml("Quedan <b>"+miJuego.numeroFichas()+ "</b> fichas restantes"));
         mostrarTablero();
         if (miJuego.juegoTerminado()) {
-            repositorioPartidas.insert(new Partida("Sergio", miJuego.numeroFichas()));
+            SharedPreferences sharedPrefs =
+                    PreferenceManager.getDefaultSharedPreferences(this);
+            String nombreUsuario = sharedPrefs.getString("nombreJugador", "Usuario anónimo");
+            chronometer.setTextColor(Color.BLACK);
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.stop();
+            repositorioPartidas.insert(new Partida(nombreUsuario, miJuego.numeroFichas()));
             new AlertDialogFragment().show(getFragmentManager(), "ALERT_DIALOG");
         }
     }
@@ -101,12 +120,20 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.opcGuardarPartida:
                 accionGuardar();
+                Snackbar.make(
+                        findViewById(android.R.id.content),
+                        getString(R.string.txtGuardadoExito),
+                        Snackbar.LENGTH_LONG
+                ).show();
                 return true;
             case R.id.opcRecuperarPartida:
                 if(miJuego.isPartidaIniciada()){
                     new AlertRetrieveDialogFragment().show(getFragmentManager(), "RECUPERAR_PARTIDA");
                 } else {
                     accionRecuperar();
+                    chronometer.setBase(SystemClock.elapsedRealtime());
+                    chronometer.setTextColor(Color.BLACK);
+                    chronometer.stop();
                 }
                 return true;
             case R.id.opcMejoresResultados:
