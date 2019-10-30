@@ -7,6 +7,7 @@ class JuegoCelta {
     static final int FICHA = 1;
     private static final int NUM_MOVIMIENTOS = 4;
 	private int[][] tablero;
+	private boolean partidaIniciada = false;
 
     private static final int[][] TABLERO_INICIAL = {	// Posiciones válidas del tablero
             {HUECO, HUECO, FICHA, FICHA, FICHA, HUECO, HUECO},
@@ -108,14 +109,16 @@ class JuegoCelta {
 		} else if (estadoActual == Estado.ESTADO_SELECCION_DESTINO) {
 			if (movimientoAceptable(iSeleccionada, jSeleccionada, iDestino, jDestino)) {
 				estadoActual = Estado.ESTADO_SELECCION_FICHA;
-
                 // Actualizar tablero
 				tablero[iSeleccionada][jSeleccionada] = HUECO;
 				tablero[iSaltada][jSaltada]           = HUECO;
 				tablero[iDestino][jDestino]           = FICHA;
 
-				if (juegoTerminado())
+				partidaIniciada = true;
+				if (juegoTerminado()){
 					estadoActual = Estado.ESTADO_TERMINADO;
+					partidaIniciada = false;
+				}
 			} else { // El movimiento no es aceptable, la última ficha pasa a ser la seleccionada
 				iSeleccionada = iDestino;
 				jSeleccionada = jDestino;
@@ -180,5 +183,10 @@ class JuegoCelta {
         tablero[TAMANIO / 2][TAMANIO / 2] = HUECO;   // hueco en posición central
 
         estadoActual = Estado.ESTADO_SELECCION_FICHA;
+		partidaIniciada = false;
+	}
+
+	public boolean isPartidaIniciada(){
+		return partidaIniciada;
 	}
 }

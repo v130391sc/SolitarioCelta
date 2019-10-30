@@ -20,6 +20,12 @@
     <string name="txtDialogoReiniciarAfirmativo">Reiniciar</string>
     <string name="txtDialogoReiniciarNegativo">Volver</string>
 
+    <!-- Diálogo Recuperar -->
+    <string name="txtDialogoRecuperarTitulo">Recuperar</string>
+    <string name="txtDialogoRecuperarPregunta">Perderá los progresos realizados de la partida actual. ¿Desea continuar?</string>
+    <string name="txtDialogoRecuperarAfirmativo">Cargar partida</string>
+    <string name="txtDialogoRecuperarNegativo">Volver</string>
+
     <!-- Acerca de -->
     <string name="aboutText">Acerca de</string>
     <string name="aboutMessage">El juego consiste en ir comiendo piezas

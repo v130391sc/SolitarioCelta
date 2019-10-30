@@ -88,13 +88,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, AcercaDe.class));
                 return true;
             case R.id.opcReiniciarPartida:
-                new AlertRestartDialogFragment().show(getFragmentManager(), "ALERT_DIALOG");
+                new AlertRestartDialogFragment().show(getFragmentManager(), "REINICIAR_PARTIDA");
                 return true;
             case R.id.opcGuardarPartida:
                 accionGuardar();
                 return true;
             case R.id.opcRecuperarPartida:
-                accionRecuperar();
+                if(miJuego.isPartidaIniciada()){
+                    new AlertRetrieveDialogFragment().show(getFragmentManager(), "RECUPERAR_PARTIDA");
+                } else {
+                    accionRecuperar();
+                }
+                return true;
             // TODO!!! resto opciones
 
             default:
@@ -117,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         return getResources().getString(R.string.nombreFicheroPersistencia);
     }
 
-    private void accionGuardar() {
+    public void accionGuardar() {
 
         try {  // Añadir al fichero
             FileOutputStream fos;
@@ -132,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void accionRecuperar() {
+    public void accionRecuperar() {
         BufferedReader fin;
 
         try {

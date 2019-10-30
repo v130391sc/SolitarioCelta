@@ -76,4 +76,11 @@ public class SCeltaViewModel extends ViewModel {
     public void reiniciar() {
         _juego.reiniciar();
     }
+
+    /**
+     * Comprueba si se ha iniciado el juego
+     */
+    public boolean isPartidaIniciada() {
+        return _juego.isPartidaIniciada();
+    }
 }
